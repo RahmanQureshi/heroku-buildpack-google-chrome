@@ -1,7 +1,8 @@
-# heroku-buildpack-google-chrome
+# heroku-buildpack-google-chrome-83
 
-This buildpack downloads and installs (headless) Google Chrome from your choice
-of release channels.
+Forked and hacked from https://github.com/heroku/heroku-buildpack-google-chrome.
+
+This buildpack downloads and installs (headless) Google Chrome stable version 83 from slimjet. Ignore the things below about being able to select channels.
 
 ## Channels
 
@@ -14,8 +15,8 @@ channel will be used.
 
 ## Shims and Command Line Flags
 
-This buildpack installs shims that always add `--headless`, `--disable-gpu`, 
-`--no-sandbox`, and `--remote-debugging-port=9222` to any `google-chrome` 
+This buildpack installs shims that always add `--headless`, `--disable-gpu`,
+`--no-sandbox`, and `--remote-debugging-port=9222` to any `google-chrome`
 command as you'll have trouble running Chrome on a Heroku dyno otherwise.
 
 You'll have two of these shims on your path: `google-chrome` and
@@ -34,8 +35,8 @@ but that's a read-only filesystem in a Heroku slug. You'll need to tell Selenium
 that the chrome binary is at `/app/.apt/usr/bin/google-chrome` instead.
 
 To make that easier, this buildpack makes `$GOOGLE_CHROME_BIN`, and
-`$GOOGLE_CHROME_SHIM` available as environment variables. With them, you can 
-use the standard location locally and the custom location on Heroku. An example 
+`$GOOGLE_CHROME_SHIM` available as environment variables. With them, you can
+use the standard location locally and the custom location on Heroku. An example
 configuration for Ruby's Capybara:
 
 ```
@@ -59,3 +60,14 @@ Capybara.javascript_driver = :chrome
 Make sure you publish this buildpack in the buildpack registry
 
 `heroku buildpacks:publish heroku/google-chrome master`
+
+## Running chrome inside the docker yourself
+
+docker build --build-arg BASE_IMAGE=heroku/heroku:18 .
+docker run -it -p 9222:9222
+
+chmod +x .profile.d/*.sh
+source .profile.d/000_apt.sh
+source .profile.d/010_google-chrome.sh
+
+$HOME/.apt/usr/bin/google-chrome-stable --headless --no-sandbox --disable-gpu --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222 --no-sandbox --enable-logging --v=1 https://boards.greenhouse.io/duolingo/jobs/483434400
