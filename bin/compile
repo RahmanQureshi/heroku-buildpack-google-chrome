@@ -138,8 +138,9 @@ done
 mkdir -p $BUILD_DIR/.apt
 
 for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
-  topic "Installing $(basename $DEB)"
+  topic "Found deb file $(basename $DEB)"
   if [ "$(basename $DEB)" != "google-chrome-stable_current_amd64.deb" ]; then
+    topic "Installing $(basename $DEB)"
     dpkg -x $DEB $BUILD_DIR/.apt/
   fi
 done
