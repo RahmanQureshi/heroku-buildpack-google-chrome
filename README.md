@@ -63,11 +63,17 @@ Make sure you publish this buildpack in the buildpack registry
 
 ## Running chrome inside the docker yourself
 
-docker build --build-arg BASE_IMAGE=heroku/heroku:18 .
-docker run -it -p 9222:9222
+## Running chrome inside the docker yourself
 
-chmod +x .profile.d/*.sh
-source .profile.d/000_apt.sh
-source .profile.d/010_google-chrome.sh
+`docker build --no-cache  --build-arg STACK=heroku-18 --build-arg GOOGLE_CHROME_CHANNEL=stable --build-arg BASE_IMAGE=heroku/heroku:18 .`
 
-$HOME/.apt/usr/bin/google-chrome-stable --headless --no-sandbox --disable-gpu --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222 --no-sandbox --enable-logging --v=1 https://boards.greenhouse.io/duolingo/jobs/483434400
+`docker run -it -p 9222:9222 <image id>`
+
+
+`chmod +x .profile.d/*.sh`
+
+`source .profile.d/000_apt.sh`
+
+`source .profile.d/010_google-chrome.sh`
+
+`$HOME/.apt/usr/bin/google-chrome-stable --headless --no-sandbox --disable-gpu --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222 --no-sandbox --enable-logging --v=1`
